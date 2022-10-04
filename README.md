@@ -1,4 +1,7 @@
-# wifi_deauth_multiple
+# DISCLAIMER
+__All data is only for informational and educational purposes. Author will not be responsible for any action performed by any user.__
+
+# WiFi-Deauth-MultiAP
 
 ## Prerequisites:
 * root;

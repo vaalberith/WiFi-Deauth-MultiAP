@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import os
 import time
@@ -123,7 +125,7 @@ def scan(iface):
             os.system("clear")
             csv_reader(csv_filename)
             draw_spin()
-            time.sleep(0.5)
+            time.sleep(1.0)
 
         except(KeyboardInterrupt):
             print(bcolors.WARNING + "\nWiFi Deauth: (Ctrl + C ) Scan finished" + bcolors.ENDC)
@@ -165,8 +167,11 @@ def csv_reader(csv_path):
     n_packets = data_station["# packets"].tolist()
 
     for i in range(len(n_packets)):
-        bssid_packet = bssids_packets[i].strip()
-        n_packet = int(n_packets[i])
+        bssid_packet = str(bssids_packets[i]).strip()
+        n_packet = n_packets[i].strip()
+        if not n_packet.isnumeric():
+            continue
+        n_packet = int(n_packet)
         if bssid_packet in dict.keys():
             dict[bssid_packet] = dict[bssid_packet] + n_packet
 
@@ -174,7 +179,11 @@ def csv_reader(csv_path):
 
     print("№".rjust(2) + " ESSID".ljust(33) + "BSSID".ljust(20) + "RSSI".rjust(5) + "CH".rjust(5) + "Packets".rjust(8) + "\n")
     for i in range(num):
-        print(str(i).rjust(2) + str(essids[i]).ljust(33) + str(bssids[i]).ljust(20) + str(rssis[i]).rjust(5) + str(channels[i]).rjust(5) + str(dict[bssids[i]]).rjust(8))
+        bssid = bssids[i]
+        packet_count = 0
+        if bssid in dict.keys():
+            packet_count = dict[bssid]
+        print(str(i).rjust(2) + str(essids[i]).ljust(33) + str(bssids[i]).ljust(20) + str(rssis[i]).rjust(5) + str(channels[i]).rjust(5) + str(packet_count).rjust(8))
 
 def deauth(bssid, essid, channel, iface, deauth_number):
     global proc_read
